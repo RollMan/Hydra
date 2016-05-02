@@ -1,0 +1,18 @@
+Traceback (most recent call last):
+  File "utiltest.py", line 6, in <module>
+    tw.authorize_twitter(apikey, apisec)
+  File "/home/rollman/Documents/Hydra/util.py", line 99, in authorize_twitter
+    res = urllib.request.urlopen(access_token_req).read()
+  File "/usr/lib/python3.5/urllib/request.py", line 162, in urlopen
+    return opener.open(url, data, timeout)
+  File "/usr/lib/python3.5/urllib/request.py", line 471, in open
+    response = meth(req, response)
+  File "/usr/lib/python3.5/urllib/request.py", line 581, in http_response
+    'http', request, response, code, msg, hdrs)
+  File "/usr/lib/python3.5/urllib/request.py", line 509, in error
+    return self._call_chain(*args)
+  File "/usr/lib/python3.5/urllib/request.py", line 443, in _call_chain
+    result = func(*args)
+  File "/usr/lib/python3.5/urllib/request.py", line 589, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 401: Authorization Required
