@@ -15,15 +15,21 @@ def random_chr(len):
 
 class Twitter:
     oauth_token = {}
+    apikey = ""
+    apisec = ""
 
-    def authorize_twitter(self,apikey, apisec):
+    def __init__(self, apikey, apisec):
+        self.apikey = apikey
+        self.apisec = apisec
+
+    def authorize_twitter(self):
         # Authorize
         # access_token = ''
         # access_token_secret = ''
         req_url = 'https://api.twitter.com/oauth/request_token'
         auth_param = {
             'oauth_callback': 'oob',
-            'oauth_consumer_key': apikey,
+            'oauth_consumer_key': self.apikey,
             'oauth_signature_method': 'HMAC-SHA1',
             'oauth_timestamp': int(time.time()),
             'oauth_nonce': random_chr(30),
@@ -40,7 +46,7 @@ class Twitter:
                                     urllib.parse.quote(req_url, ''),
                                     urllib.parse.quote(auth_param_str)
                                    )
-        key = '{}&{}'.format(apisec, '')
+        key = '{}&{}'.format(self.apisec, '')
         signature = hmac.new(
                              key.encode('utf-8'),
                              message.encode('utf-8'),
@@ -63,7 +69,7 @@ class Twitter:
         oauth_token_url = "https://api.twitter.com/oauth/access_token"
         oauth_verifier = int(input("PIN : "))
         auth_param = {
-            'oauth_consumer_key': apikey,
+            'oauth_consumer_key': self.apikey,
             'oauth_signature_method': 'HMAC-SHA1',
             'oauth_timestamp': int(time.time()),
             'oauth_nonce': random_chr(30),
@@ -83,7 +89,7 @@ class Twitter:
                                     urllib.parse.quote(req_url, ''),
                                     urllib.parse.quote(auth_param_str)
                                    )
-        key = '{}&{}'.format(apisec, '')
+        key = '{}&{}'.format(self.apisec, '')
         signature = hmac.new(
                              key.encode('utf-8'),
                              message.encode('utf-8'),
@@ -99,9 +105,9 @@ class Twitter:
         res = urllib.request.urlopen(access_token_req).read()
         self.oauth_token = {key.split('=')[0]: key.split( '=')[1] for key in res.decode('ascii').split('&')}
 
-    def request(self, apikey, apisec, url, content, method):
+    def request(self, url, content, method):
         param = {
-            'oauth_consumer_key': apikey,
+            'oauth_consumer_key': self.apikey,
             'oauth_signature_method': 'HMAC-SHA1',
             'oauth_timestamp': int(time.time()),
             'oauth_nonce': random_chr(30),
@@ -116,7 +122,7 @@ class Twitter:
             str(key), ''), urllib.parse.quote(str(param[key]), ''))for key in sorted(param)])
         message = '{}&{}&{}'.format(
             method, urllib.parse.quote(url, ''), urllib.parse.quote(param_str, ''))
-        key = '{}&{}'.format(apisec, self.oauth_token['oauth_token_secret'])
+        key = '{}&{}'.format(self.apisec, self.oauth_token['oauth_token_secret'])
         signature = hmac.new(
             key.encode('utf-8'), message.encode('utf-8'), hashlib.sha1)
         digest_base64 = base64.encodestring(
